@@ -1,0 +1,19 @@
+name: Package Netlify Upload
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+jobs:
+  package:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Prepare Netlify file
+        run: cp 'index (7).html' index.html
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: leno-netlify-upload
+          path: index.html
