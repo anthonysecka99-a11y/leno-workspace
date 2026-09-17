@@ -1,0 +1,70 @@
+name: Fix Mobile Rota
+
+on:
+  push:
+    paths:
+      - 'index (7).html'
+      - '.github/workflows/fix-mobile-rota.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  fix:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Patch mobile rota
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          p=Path('index (7).html')
+          s=p.read_text(encoding='utf-8')
+          marker='LENO MOBILE ROTA SWIPE V3'
+          if marker not in s:
+              block='''
+<style id="leno-mobile-rota-swipe-v3">
+/* LENO MOBILE ROTA SWIPE V3 */
+@media (max-width:760px){
+  .tablewrap{overflow-x:scroll!important;overflow-y:visible!important;width:100%!important;max-width:100%!important;-webkit-overflow-scrolling:touch!important;overscroll-behavior-x:contain!important;scrollbar-width:none!important;touch-action:pan-y!important;}
+  .tablewrap::-webkit-scrollbar{display:none!important}
+  .rota{width:max-content!important;min-width:0!important;table-layout:fixed!important}
+  .rota th:first-child,.rota td.person{position:sticky!important;left:0!important;z-index:30!important;width:185px!important;min-width:185px!important;max-width:185px!important;background:#f8fafb!important;box-shadow:8px 0 16px rgba(16,24,40,.10)!important}
+  .rota th:first-child{z-index:40!important}
+  .rota th:not(:first-child),.rota td:not(.person){width:155px!important;min-width:155px!important;max-width:155px!important}
+  .rota th{position:sticky!important;top:0!important;z-index:20!important}
+  .rota th:first-child{z-index:40!important}
+}
+</style>
+<script>
+(function(){
+ function init(){
+  if(innerWidth>760)return;
+  document.querySelectorAll('.tablewrap').forEach(function(el){
+   if(el.dataset.lenoSwipe==='1')return;
+   el.dataset.lenoSwipe='1';
+   var sx=0,sy=0,ss=0,axis='';
+   el.addEventListener('touchstart',function(e){var t=e.touches[0];if(!t)return;sx=t.clientX;sy=t.clientY;ss=el.scrollLeft;axis='';},{passive:true});
+   el.addEventListener('touchmove',function(e){var t=e.touches[0];if(!t)return;var dx=t.clientX-sx,dy=t.clientY-sy;if(!axis&&Math.max(Math.abs(dx),Math.abs(dy))>8)axis=Math.abs(dx)>Math.abs(dy)?'x':'y';if(axis==='x'){e.preventDefault();el.scrollLeft=ss-dx;}},{passive:false});
+  });
+ }
+ if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',init);else init();
+ new MutationObserver(init).observe(document.documentElement,{childList:true,subtree:true});
+})();
+</script>
+'''
+              s=s.replace('</head>',block+'</head>',1)
+              p.write_text(s,encoding='utf-8')
+          else:
+              print('V3 already present')
+          Path('/tmp/changed').write_text('1' if marker in s else '0')
+          PY
+      - name: Commit patch
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add 'index (7).html'
+          git diff --cached --quiet && exit 0
+          git commit -m 'Fix iPhone horizontal rota swipe'
+          git push
