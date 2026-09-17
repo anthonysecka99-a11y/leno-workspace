@@ -584,57 +584,6 @@ button:focus-visible{outline:none;box-shadow:0 0 0 3px var(--focus)}
 }
 </style>
 
-
-<style id="leno-mobile-rota-swipe">
-/* LENO MOBILE ROTA SWIPE FIX */
-@media (max-width:760px){
-  /* Keep the staff column visible while the day columns can be swiped horizontally. */
-  .tablewrap{
-    overflow-x:auto!important;
-    overflow-y:visible!important;
-    -webkit-overflow-scrolling:touch;
-    overscroll-behavior-x:contain;
-    touch-action:pan-x pan-y;
-    scrollbar-width:none;
-    border-radius:0 0 20px 20px;
-  }
-  .tablewrap::-webkit-scrollbar{display:none}
-  .rota{
-    width:max-content!important;
-    min-width:0!important;
-    table-layout:fixed;
-  }
-  .rota th,.rota td{
-    vertical-align:top;
-  }
-  .rota th:first-child,.rota td.person{
-    position:sticky!important;
-    left:0!important;
-    z-index:8!important;
-    width:175px!important;
-    min-width:175px!important;
-    max-width:175px!important;
-    background:#111318!important;
-    box-shadow:8px 0 14px rgba(0,0,0,.10);
-  }
-  .rota th:first-child{z-index:10!important}
-  .rota th:not(:first-child),.rota td:not(.person){
-    width:160px!important;
-    min-width:160px!important;
-  }
-  .rota th{
-    position:sticky!important;
-    top:0!important;
-    z-index:7;
-    background:#111318!important;
-  }
-  .rota th:first-child{z-index:10!important}
-  .day{
-    min-width:160px!important;
-    width:160px!important;
-  }
-}
-</style>
 </head>
 <body><div class="app">
 <header class="topbar"><div class="top">
