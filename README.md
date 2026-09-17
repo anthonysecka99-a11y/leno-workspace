@@ -22,3 +22,5 @@ The check validates the HTML entry file for a doctype, title, viewport configura
 ## Deployment
 
 The production deployment is currently managed through Netlify. GitHub is the source-of-truth repository for the frontend file; deployment should be verified after publishing rather than assuming a GitHub commit is already live.
+
+<!-- mobile rota v6 trigger -->
