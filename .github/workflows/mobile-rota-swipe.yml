@@ -1,0 +1,44 @@
+name: Mobile Rota Swipe Fix
+
+on:
+  push:
+    paths-ignore:
+      - 'index (7).html'
+      - 'index (7).html.backup'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  apply-mobile-rota-fix:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Apply mobile swipe layout
+        shell: python
+        run: |
+          from pathlib import Path
+          p = Path('index (7).html')
+          s = p.read_text(encoding='utf-8')
+          backup = Path('index (7).html.backup')
+          if not backup.exists():
+              backup.write_text(s, encoding='utf-8')
+
+          marker = '/* LENO MOBILE ROTA SWIPE FIX */'
+          if marker not in s:
+              css = '''\n<style id="leno-mobile-rota-swipe">\n/* LENO MOBILE ROTA SWIPE FIX */\n@media (max-width:760px){\n  /* Keep the staff column visible while the day columns can be swiped horizontally. */\n  .tablewrap{\n    overflow-x:auto!important;\n    overflow-y:visible!important;\n    -webkit-overflow-scrolling:touch;\n    overscroll-behavior-x:contain;\n    touch-action:pan-x pan-y;\n    scrollbar-width:none;\n    border-radius:0 0 20px 20px;\n  }\n  .tablewrap::-webkit-scrollbar{display:none}\n  .rota{\n    width:max-content!important;\n    min-width:0!important;\n    table-layout:fixed;\n  }\n  .rota th,.rota td{\n    vertical-align:top;\n  }\n  .rota th:first-child,.rota td.person{\n    position:sticky!important;\n    left:0!important;\n    z-index:8!important;\n    width:175px!important;\n    min-width:175px!important;\n    max-width:175px!important;\n    background:#111318!important;\n    box-shadow:8px 0 14px rgba(0,0,0,.10);\n  }\n  .rota th:first-child{z-index:10!important}\n  .rota th:not(:first-child),.rota td:not(.person){\n    width:160px!important;\n    min-width:160px!important;\n  }\n  .rota th{\n    position:sticky!important;\n    top:0!important;\n    z-index:7;\n    background:#111318!important;\n  }\n  .rota th:first-child{z-index:10!important}\n  .day{\n    min-width:160px!important;\n    width:160px!important;\n  }\n}\n</style>\n'''
+              s = s.replace('</head>', css + '</head>', 1)
+              p.write_text(s, encoding='utf-8')
+
+      - name: Commit mobile fix
+        shell: bash
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add "index (7).html" "index (7).html.backup"
+          git diff --cached --quiet && exit 0
+          git commit -m "Improve mobile rota horizontal swipe"
+          git push
