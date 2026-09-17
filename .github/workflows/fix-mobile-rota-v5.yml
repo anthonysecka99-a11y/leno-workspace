@@ -1,0 +1,27 @@
+name: LENO Mobile Rota V5
+
+on:
+  push:
+    paths:
+      - '.github/workflows/fix-mobile-rota-v5.yml'
+      - 'index (7).html'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  patch:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Apply patch
+        run: python3 -c "import base64;exec(base64.b64decode('ZnJvbSBwYXRobGliIGltcG9ydCBQYXRoCnA9UGF0aCgiaW5kZXggKDcpLmh0bWwiKQpzPXAucmVhZF90ZXh0KGVuY29kaW5nPSJ1dGYtOCIpCm1hcmtlcj0iTEVOTyBNT0JJTEUgUk9UQSBTV0lQRSBWNCIKYmxvY2s9IiIiPHN0eWxlIGlkPSJsZW5vLW1vYmlsZS1yb3RhLXN3aXBlLXY0Ij5AbWVkaWEobWF4LXdpZHRoOjc2MHB4KXsudGFibGV3cmFwe292ZXJmbG93LXg6c2Nyb2xsIWltcG9ydGFudDtvdmVyZmxvdy15OnZpc2libGUhaW1wb3J0YW50Oy13ZWJraXQtb3ZlcmZsb3ctc2Nyb2xsaW5nOnRvdWNoIWltcG9ydGFudDtzY3JvbGxiYXItd2lkdGg6bm9uZSFpbXBvcnRhbnQ7dG91Y2gtYWN0aW9uOnBhbi15IWltcG9ydGFudH0udGFibGV3cmFwOjotd2Via2l0LXNjcm9sbGJhcntkaXNwbGF5Om5vbmV9LnJvdGF7d2lkdGg6bWF4LWNvbnRlbnQhaW1wb3J0YW50O21pbi13aWR0aDowIWltcG9ydGFudDt0YWJsZS1sYXlvdXQ6Zml4ZWQhaW1wb3J0YW50fS5yb3RhIHRoOmZpcnN0LWNoaWxkLC5yb3RhIHRkLnBlcnNvbnxwb3NpdGlvbjpzdGlja3khaW1wb3J0YW50O2xlZnQ6MCFpbXBvcnRhbnQ7ei1pbmRleDozMCFpbXBvcnRhbnQ7d2lkdGg6MTg1cHghaW1wb3J0YW50O21pbi13aWR0aDoxODVweCFpbXBvcnRhbnQ7bWF4LXdpZHRoOjE4NXB4IWltcG9ydGFudDtiYWNrZ3JvdW5kOiNmOGZhZmIhaW1wb3J0YW50O2JveC1zaGFkb3c6OHB4IDAgMTZweCByZ2JhKDE2LDI0LDQwLC4xKSFpbXBvcnRhbnR9LnJvdGEgdGg6bm90KDpmaXJzdC1jaGlsZCksLnJvdGEgdGQ6bm90KC5wZXJzb24pe3dpZHRoOjE1NXB4IWltcG9ydGFudDttaW4td2lkdGg6MTU1cHghaW1wb3J0YW50O21heC13aWR0aDoxNTVweCFpbXBvcnRhbnR9LnJvdGEgdGh7cG9zaXRpb246c3RpY2t5IWltcG9ydGFudDt0b3A6MCFpbXBvcnRhbnQ7ei1pbmRleDoyMCFpbXBvcnRhbnR9LnJvdGEgdGg6Zmlyc3QtY2hpbGR7ei1pbmRleDo0MCFpbXBvcnRhbnR9fTwvc3R5bGU+PHNjcmlwdD4oZnVuY3Rpb24oKXtmdW5jdGlvbiBpKCl7aWYoaW5uZXJXaWR0aD43NjApcmV0dXJuO2RvY3VtZW50LnF1ZXJ5U2VsZWN0b3JBbGwoIi50YWJsZXdyYXAiKS5mb3JFYWNoKGZ1bmN0aW9uKGUpe2lmKGUuZGF0YXNldC5sZW5vU3dpcGUpcmV0dXJuO2UuZGF0YXNldC5sZW5vU3dpcGU9MTt2YXIgeD0wLHk9MCxzPTAsYT0iIjtlLmFkZEV2ZW50TGlzdGVuZXIoInRvdWNoc3RhcnQiLGZ1bmN0aW9uKHQpe3ZhciBuPXQudG91Y2hlc1swXTt4PW4uY2xpZW50WDt5PW4uY2xpZW50WTtzPWUuc2Nyb2xsTGVmdDthPSIifSx7cGFzc2l2ZTp0cnVlfSk7ZS5hZGRFdmVudExpc3RlbmVyKCJ0b3VjaG1vdmUiLGZ1bmN0aW9uKHQpe3ZhciBuPXQudG91Y2hlc1swXSxkeD1uLmNsaWVudFgteCxkeT1uLmNsaWVudFkteTtpZighYSYmTWF0aC5tYXgoTWF0aC5hYnMoZHgpLE1hdGguYWJzKGR5KSk+OClhPU1hdGguYWJzKGR4KT5NYXRoLmFicyhkeSk/IngiOiJ5IjtpZihhPT09IngiKXt0LnByZXZlbnREZWZhdWx0KCk7ZS5zY3JvbGxMZWZ0PXMtZHh9fSx7cGFzc2l2ZTpmYWxzZX0pfSl9aWYoZG9jdW1lbnQucmVhZHlTdGF0ZT09PSJsb2FkaW5nIilkb2N1bWVudC5hZGRFdmVudExpc3RlbmVyKCJET01Db250ZW50TG9hZGVkIixpKTtlbHNlIGkoKTtuZXcgTXV0YXRpb25PYnNlcnZlcihpKS5vYnNlcnZlKGRvY3VtZW50LmRvY3VtZW50RWxlbWVudCx7Y2hpbGRMaXN0OnRydWUsc3VidHJlZTp0cnVlfSl9KSgpOzwvc2NyaXB0PiIiIgppZiBtYXJrZXIgbm90IGluIHM6cz1zLnJlcGxhY2UoIjwvaGVhZD4iLGJsb2NrKyI8L2hlYWQ+IiwxKTtwLndyaXRlX3RleHQocyxlbmNvZGluZz0idXRmLTgiKQo='))"
+      - name: Commit
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add 'index (7).html'
+          git diff --cached --quiet && exit 0
+          git commit -m 'Fix iPhone rota horizontal swiping'
+          git push
