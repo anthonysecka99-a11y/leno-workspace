@@ -1,0 +1,113 @@
+name: LENO Mobile Rota V6
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+
+jobs:
+  patch:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Patch mobile rota scrolling
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          p = Path('index (7).html')
+          s = p.read_text(encoding='utf-8')
+          marker = '/* LENO_MOBILE_ROTA_V6 */'
+          if marker in s:
+              print('V6 patch already present')
+              raise SystemExit(0)
+          css = r'''<style id="leno-mobile-rota-v6">
+          /* LENO_MOBILE_ROTA_V6 */
+          @media (max-width:760px){
+            .card:has(.tablewrap){overflow:hidden!important}
+            .tablewrap.leno-mobile-scroll{
+              display:block!important;
+              width:100%!important;
+              max-width:100%!important;
+              overflow-x:scroll!important;
+              overflow-y:hidden!important;
+              -webkit-overflow-scrolling:touch!important;
+              overscroll-behavior-x:contain!important;
+              touch-action:pan-x!important;
+              scrollbar-width:none!important;
+              position:relative!important;
+            }
+            .tablewrap.leno-mobile-scroll::-webkit-scrollbar{display:none!important}
+            .tablewrap.leno-mobile-scroll .rota{
+              display:table!important;
+              width:max-content!important;
+              min-width:1180px!important;
+              table-layout:auto!important;
+            }
+            .leno-rota-scrollbar{
+              display:flex;align-items:center;gap:8px;padding:8px 10px;
+              background:#111318;border-top:1px solid #262a31;border-bottom:1px solid #262a31;
+              color:#c8ccd3;position:sticky;left:0;z-index:8;
+            }
+            .leno-rota-scrollbar button{
+              width:38px;height:34px;border:1px solid #343941;border-radius:9px;
+              background:#1b1f26;color:#fff;font-size:20px;font-weight:800;line-height:1;
+            }
+            .leno-rota-scrollbar .track{flex:1;height:5px;background:#2b3038;border-radius:999px;overflow:hidden}
+            .leno-rota-scrollbar .thumb{height:100%;width:25%;background:#ff9d1a;border-radius:999px;transform:translateX(0)}
+            .leno-rota-scrollbar .hint{font-size:10px;white-space:nowrap;color:#9ca3af}
+          }
+          @media (min-width:761px){.leno-rota-scrollbar{display:none!important}}
+          </style>'''
+          js = r'''<script id="leno-mobile-rota-v6">
+          (function(){
+            const seen=new WeakSet();
+            function setup(root){
+              const wraps=(root||document).querySelectorAll ? (root||document).querySelectorAll('.tablewrap') : [];
+              wraps.forEach(w=>{
+                if(seen.has(w)) return;
+                const table=w.querySelector('.rota');
+                if(!table) return;
+                seen.add(w);
+                w.classList.add('leno-mobile-scroll');
+                let bar=document.createElement('div');
+                bar.className='leno-rota-scrollbar';
+                bar.innerHTML='<button type="button" class="prev" aria-label="Previous days">‹</button><div class="track"><div class="thumb"></div></div><div class="hint">Swipe</div><button type="button" class="next" aria-label="Next days">›</button>';
+                w.parentNode.insertBefore(bar,w);
+                const prev=bar.querySelector('.prev'),next=bar.querySelector('.next'),thumb=bar.querySelector('.thumb');
+                const update=()=>{
+                  const max=Math.max(1,w.scrollWidth-w.clientWidth);
+                  const ratio=Math.min(1,w.clientWidth/w.scrollWidth);
+                  thumb.style.width=Math.max(20,ratio*100)+'%';
+                  const usable=bar.querySelector('.track').clientWidth-thumb.clientWidth;
+                  thumb.style.transform='translateX('+(w.scrollLeft/max*usable||0)+'px)';
+                  prev.disabled=w.scrollLeft<=2; next.disabled=w.scrollLeft>=max-2;
+                  prev.style.opacity=prev.disabled?.45:1; next.style.opacity=next.disabled?.45:1;
+                };
+                prev.addEventListener('click',()=>w.scrollBy({left:-Math.max(260,w.clientWidth*.72),behavior:'smooth'}));
+                next.addEventListener('click',()=>w.scrollBy({left:Math.max(260,w.clientWidth*.72),behavior:'smooth'}));
+                w.addEventListener('scroll',update,{passive:true});
+                window.addEventListener('resize',update);
+                let sx=0,sl=0,drag=false;
+                w.addEventListener('touchstart',e=>{if(e.touches.length!==1)return;sx=e.touches[0].clientX;sl=w.scrollLeft;drag=true},{passive:true});
+                w.addEventListener('touchmove',e=>{if(!drag||e.touches.length!==1)return;const dx=e.touches[0].clientX-sx;if(Math.abs(dx)>3){w.scrollLeft=sl-dx;if(e.cancelable)e.preventDefault()}},{passive:false});
+                w.addEventListener('touchend',()=>{drag=false},{passive:true});
+                update();
+                setTimeout(update,300);
+              });
+            }
+            function boot(){setup(document);const mo=new MutationObserver(()=>setup(document));mo.observe(document.body,{childList:true,subtree:true});}
+            if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',boot);else boot();
+          })();
+          </script>'''
+          insert = css + '\n' + js + '\n'
+          s = s.replace('</head>', insert + '</head>', 1)
+          p.write_text(s, encoding='utf-8')
+          print('Inserted V6 mobile rota patch')
+          PY
+      - name: Commit patch
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add 'index (7).html'
+          git commit -m "Fix iPhone Team Rota horizontal scrolling" || echo "No changes"
+          git push
