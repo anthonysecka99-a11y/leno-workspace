@@ -682,6 +682,24 @@ button:focus-visible{outline:none;box-shadow:0 0 0 3px var(--focus)}
 <script id="leno-mobile-rota-v7">/* LENO_MOBILE_ROTA_V7 */
 (function(){function boot(){document.querySelectorAll('.tablewrap').forEach(function(w){if(w.dataset.lenoV7)return;var table=w.querySelector('.rota');if(!table)return;w.dataset.lenoV7='1';w.classList.add('leno-mobile-scroll');var c=document.createElement('div');c.className='leno-rota-controls';c.innerHTML='<button type="button" class="v7prev">‹</button><div class="label">SWIPE FOR MORE DAYS</div><button type="button" class="v7next">›</button>';w.parentNode.insertBefore(c,w);var p=c.querySelector('.v7prev'),n=c.querySelector('.v7next');function refresh(){var max=Math.max(0,w.scrollWidth-w.clientWidth);p.disabled=w.scrollLeft<2;n.disabled=w.scrollLeft>max-2}p.onclick=function(){w.scrollBy({left:-Math.max(280,w.clientWidth*.75),behavior:'smooth'})};n.onclick=function(){w.scrollBy({left:Math.max(280,w.clientWidth*.75),behavior:'smooth'})};w.addEventListener('scroll',refresh,{passive:true});refresh();});}
 if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',function(){boot();new MutationObserver(boot).observe(document.body,{childList:true,subtree:true})});else{boot();new MutationObserver(boot).observe(document.body,{childList:true,subtree:true})}})();</script>
+<style id="leno-mobile-rota-v8">/* LENO_MOBILE_ROTA_V8 */
+@media(max-width:760px){
+  .tablewrap.leno-mobile-scroll{touch-action:pan-x!important;overflow-x:scroll!important;overflow-y:hidden!important;-webkit-overflow-scrolling:touch!important;overscroll-behavior-x:contain!important}
+  .tablewrap.leno-mobile-scroll .rota{min-width:1180px!important;width:max-content!important}
+  .tablewrap.leno-mobile-scroll .rota th:first-child{position:sticky!important;left:0!important;top:0!important;z-index:8!important;background:#fbfafc!important;box-shadow:8px 0 14px -14px rgba(0,0,0,.55)!important}
+  .tablewrap.leno-mobile-scroll .rota td.person{position:sticky!important;left:0!important;z-index:7!important;background:#fff!important;box-shadow:8px 0 14px -14px rgba(0,0,0,.55)!important}
+  .leno-rota-controls{display:flex!important;align-items:center;gap:8px;padding:8px 10px;background:#111318;border-bottom:1px solid #262a31}
+  .leno-rota-controls button{width:42px;height:36px;border:1px solid #343941;border-radius:9px;background:#1b1f26;color:#fff;font-size:22px;font-weight:800}
+  .leno-rota-controls .label{flex:1;text-align:center;font-size:10px;color:#9ca3af;font-weight:700}
+  .leno-rota-controls button:disabled{opacity:.35}
+}
+@media(min-width:761px){.leno-rota-controls{display:none!important}}
+</style>
+<script id="leno-mobile-rota-v8">/* LENO_MOBILE_ROTA_V8 */
+(function(){function boot(){document.querySelectorAll('.tablewrap').forEach(function(w){if(w.dataset.lenoV8)return;var table=w.querySelector('.rota');if(!table)return;w.dataset.lenoV8='1';w.classList.add('leno-mobile-scroll');var c=document.createElement('div');c.className='leno-rota-controls';c.innerHTML='<button type="button" class="v8prev">‹</button><div class="label">SWIPE FOR MORE DAYS</div><button type="button" class="v8next">›</button>';w.parentNode.insertBefore(c,w);var p=c.querySelector('.v8prev'),n=c.querySelector('.v8next');function refresh(){var max=Math.max(0,w.scrollWidth-w.clientWidth);p.disabled=w.scrollLeft<2;n.disabled=w.scrollLeft>max-2}p.onclick=function(){w.scrollBy({left:-Math.max(280,w.clientWidth*.75),behavior:'smooth'})};n.onclick=function(){w.scrollBy({left:Math.max(280,w.clientWidth*.75),behavior:'smooth'})};w.addEventListener('scroll',refresh,{passive:true});window.addEventListener('resize',refresh);refresh();});}
+function start(){boot();new MutationObserver(boot).observe(document.body,{childList:true,subtree:true})}
+if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',start);else start();})();
+</script>
 </head>
 <body><div class="app">
 <header class="topbar"><div class="top">
